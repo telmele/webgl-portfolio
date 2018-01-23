@@ -39,8 +39,8 @@ gulp.task('browserSync', function() {
 gulp.task('useref', function(){
     return gulp.src('app/*.html')
         .pipe(useref())
-        .pipe(gulpIf('*.js', uglify()))
-        .pipe(gulpIf('*.css', cssnano()))
+        .pipe(gulpIf('app/**/*.js', uglify()))
+        .pipe(gulpIf('app/**/*.css', cssnano()))
         .pipe(gulp.dest('dist'))
 });
 
@@ -66,7 +66,7 @@ gulp.task('images', function(){
 
 // Concatenate & Minify JS
 gulp.task('scripts', function() {
-    return gulp.src('js/*.js')
+    return gulp.src('app/js/**/*.js')
         .pipe(concat('all.js'))
         .pipe(gulp.dest('dist'))
         .pipe(rename('all.min.js'))
