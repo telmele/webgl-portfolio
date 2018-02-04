@@ -9,7 +9,7 @@ var gulp = require("gulp");
 var $ = require("gulp-load-plugins")();
 var config = require("../config").html;
 
-gulp.task('html', ['styles'], function() {
+gulp.task('html', ['clean','styles', 'scripts'], function() {
 
     return gulp.src(config.src + '/*.html')
 	    .pipe($.plumber())

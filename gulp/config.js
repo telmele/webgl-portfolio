@@ -19,7 +19,6 @@ module.exports = {
 		"useref": {
 			"searchPath": [
 				'.tmp',
-				'app'
 			]
 		},
 		"cssNano": {
@@ -52,7 +51,7 @@ module.exports = {
 	},
 	img: {
 		"src": imgDir + "/**/*",
-		"dest": dest + "/img",
+		"dest": dest + "/images",
 		"imagemin": {
 			"progressive": true,
 			"svgoPlugins": [{
