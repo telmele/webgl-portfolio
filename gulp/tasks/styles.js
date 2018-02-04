@@ -1,6 +1,8 @@
 const gulp = require("gulp");
 const $ = require("gulp-load-plugins")();
 const config = require("../config").styles;
+const browserSync = require("browser-sync");
+const reload = browserSync.reload;
 
 gulp.task('styles', function () {
 	return gulp.src(config.src)

@@ -12,6 +12,7 @@ var config = require("../config").html;
 gulp.task('html', ['styles'], function() {
 
     return gulp.src(config.src + '/*.html')
+	    .pipe($.plumber())
         .pipe($.useref({
             searchPath: config.useref.searchPath
         }))

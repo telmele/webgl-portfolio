@@ -8,5 +8,5 @@ const config = require("../config").clean;
 const del = require("del");
 
 gulp.task('clean', function() {
-	return del(config.dest);
+	return del(config);
 });

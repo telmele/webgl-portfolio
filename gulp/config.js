@@ -7,6 +7,10 @@
 const src = "./app";
 const dest = "./dist";
 const tmp = "./.tmp";
+const jsDir = src + "/js";
+const styleDir = src + "/css";
+const imgDir = src + "/images";
+const langDir = src + "/lang";
 
 module.exports = {
 	html: {
@@ -15,8 +19,7 @@ module.exports = {
 		"useref": {
 			"searchPath": [
 				'.tmp',
-				'app',
-				'.'
+				'app'
 			]
 		},
 		"cssNano": {
@@ -36,19 +39,19 @@ module.exports = {
 		}
 	},
 	styles: {
-		"src": src + "/styles/*",
-		"dest": tmp + "/styles",
+		"src": styleDir + "/*",
+		"dest": tmp + "/css",
 		"autoprefixer": {
 			"browsers": ['last 2 versions'],
 			"cascade": false
 		}
 	},
 	scripts: {
-		"src": src + "/scripts/**/*.js",
-		"dest": tmp + "/scripts"
+		"src": jsDir + "/**/*.js",
+		"dest": tmp + "/js"
 	},
 	img: {
-		"src": src + "/img/**/*",
+		"src": imgDir + "/**/*",
 		"dest": dest + "/img",
 		"imagemin": {
 			"progressive": true,
@@ -75,15 +78,14 @@ module.exports = {
 		},
 		"watch_reload": [
 			src + "/*.html",
-			src + "/scripts/**/*.js",
 			src + "/img/**/*",
 			tmp + "/fonts/**/*",
-			tmp + "/styles/**/*.css"
+			tmp + "/css/**/*.css",
+			jsDir + "/**/*.js"
 		],
 		"watch": {
-			"styles": src + "/styles/**/*",
-			"fonts": src + "/fonts/**/*",
-			"bower": "bower.json"
+			"styles": styleDir + "/**/*",
+			"fonts": src + "/fonts/**/*"
 		},
 		"test": {
 			"browsersync": {
@@ -112,27 +114,10 @@ module.exports = {
 			}
 		}
 	},
-	clean: {
-		"dest": dest
-	},
-	wiredep: {
-		"styles": {
-			"src": src + "/styles",
-			"dest": src + "/styles",
-			"wiredepStream": {
-
-				"ignorePath": /^(\.\.\/)+/
-			}
-		},
-		"html": {
-			"src": src + "/*.html",
-			"dest": src,
-			"wiredepStream": {
-
-				"ignorePath": /^(\.\.\/)*\.\./
-			}
-		}
-	},
+	clean: [
+		dest,
+		tmp
+	],
 	lint: {
 		"reload": {
 			"stream": true,
