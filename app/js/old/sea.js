@@ -48,7 +48,7 @@ void main() {
 `;
 
 function initGeometry() {
-    seaGeometry = new THREE.PlaneBufferGeometry(100, 100, 20, 20);
+    seaGeometry = new THREE.PlaneBufferGeometry(planeSize+50, planeSize+50, 20, 20);
     seaGeometry.rotateX(-Math.PI / 2);
 }
 
@@ -75,5 +75,8 @@ function initShader() {
 
 function initSeaMesh() {
     seaMesh = new THREE.Mesh(seaGeometry, seaShader);
+    seaMesh.position.x = -50;
+    seaMesh.position.z = -50;
+    seaMesh.receiveShadow = true;
     scene.add(seaMesh);
 }

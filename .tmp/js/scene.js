@@ -1,128 +1,138 @@
 'use strict';
 
-var camera, scene, renderer, controls;
-var seaGeometry, seaShader, seaMesh;
-var birds, bird;
+var camera, controls, scene, stats, renderer;
+var cssScene, cssRenderer;
+var composer, glitchPass, outlinePass;
+var poster;
+var raycaster = new THREE.Raycaster();
+var mouse = new THREE.Vector2();
 
-initScene();
-initMesh();
-initGeometry();
-initShader();
-initSeaMesh();
-animate();
+var modelScale = 6;
 
-var lightHouse;
+function init() {
+	initScene();
+	initCSS3D();
+	initLights();
+	initPostProcessing();
+	animate();
+}
 
 function initScene() {
-    /** CAMERA **/
-    camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 1000);
-    camera.position.set(0, 20, 100);
+	/** CAMERA **/
+	camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 1000);
+	camera.position.set(15, 5, 0);
 
-    /** CONTROLS **/
-    controls = new THREE.OrbitControls(camera);
-    controls.update();
-    /** SCENE **/
-    scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xff0000);
+	/** CONTROLS **/
+	controls = new THREE.OrbitControls(camera);
+	controls.enableZoom = false;
+	controls.enablePan = false;
+	controls.maxPolarAngle = Math.PI / 2;
+	controls.minAzimuthAngle = Math.PI / 2;
+	controls.maxAzimuthAngle = Math.PI;
+	controls.update();
+	/** SCENE **/
+	scene = new THREE.Scene();
+	cssScene = new THREE.Scene();
+	scene.background = new THREE.Color(0x000000);
 
-    /** HELPERS **/
-    var axesHelper = new THREE.AxesHelper(100);
-    scene.add(axesHelper);
+	/** HELPERS **/
+	// X AXIS IS RED // Y AXIS IS GREEN // Z AXIS IS BLUE
+	var axesHelper = new THREE.AxesHelper(100);
+	scene.add(axesHelper);
 
-    var gridHelper = new THREE.GridHelper(100, 100);
-    scene.add(gridHelper);
+	stats = new Stats();
+	document.body.appendChild(stats.dom);
+	/** CALLBACKS **/
+	window.addEventListener('resize', function () {
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize(window.innerWidth, window.innerHeight);
+	}, false);
+	window.addEventListener('mousemove', function () {
+		mouse.x = event.clientX / window.innerWidth * 2 - 1;
+		mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-    /** CALLBACKS **/
+		raycaster.setFromCamera(mouse, camera);
+		// calculate objects intersecting the picking ray
+		var intersects = raycaster.intersectObjects(scene.children);
+		if (intersects.length > 0) {
+			outlinePass.selectedObjects = [];
+			if (poster !== undefined) {
+				outlinePass.selectedObjects.push(poster);
+			}
+		}
+	}, false);
 
-    /** RENDERER **/
-    renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
+	/** RENDERER **/
+	renderer = new THREE.WebGLRenderer({ antialias: true });
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	document.body.appendChild(renderer.domElement);
+
+	cssRenderer = new THREE.CSS3DRenderer();
+	cssRenderer.setSize(window.innerWidth, window.innerHeight);
+	cssRenderer.domElement.style.position = 'absolute';
+	cssRenderer.domElement.style.top = 0;
+	document.body.appendChild(cssRenderer.domElement);
+
+	var mtlLoader = new THREE.MTLLoader();
+	mtlLoader.load("../model/workshop/materials.mtl", function (materials) {
+		materials.opacity = 0;
+		materials.blending = THREE.NoBlending;
+		materials.preload();
+		var objLoader = new THREE.OBJLoader();
+		objLoader.setMaterials(materials);
+		objLoader.load("../model/workshop/model.obj", function (object) {
+			object.scale.set(object.scale.x * modelScale, object.scale.y * modelScale, object.scale.z * modelScale);
+			object.castShadow = true;
+			object.receiveShadow = true;
+			for (var i = 0; i < object.children.length; i++) {
+				var mesh = object.children[i];
+				mesh.castShadow = true;
+				mesh.receiveShadow = true;
+				if (mesh.name === "mesh1854588575") {
+					poster = mesh;
+					poster.callback = function () {
+						console.log(this.name);
+					};
+				}
+			}
+			poster.scale.set(1, 1, 1);
+			console.log(object);
+			scene.add(object);
+		});
+	});
 }
 
-function initMesh() {
-
-    /** BACKGROUND **/
-    scene.background = new THREE.CubeTextureLoader().setPath('../images/CloudyCrown_01_Midday/Textures/').load(['CloudyCrown_Midday_Left.png', 'CloudyCrown_Midday_Front.png', 'CloudyCrown_Midday_Up.png', 'CloudyCrown_Midday_Down.png', 'CloudyCrown_Midday_Right.png', 'CloudyCrown_Midday_Back.png']);
-    /** LIGHTHOUSE **/
-    loadObj("../model/lighthouse/");
-    initBirds();
+function initLights() {
+	var ambiantLight = new THREE.AmbientLight(0x404040); // soft white light
+	scene.add(ambiantLight);
+	var light = new THREE.PointLight(0x5555ff, 1, 100);
+	light.position.set(0, 4, -4);
+	scene.add(light);
+	light.castShadow = true;
+	var pointLightHelper = new THREE.PointLightHelper(light, 1);
+	scene.add(pointLightHelper);
 }
-function initBirds() {
-    birds = [];
-    boids = [];
-
-    for (var i = 0; i < 200; i++) {
-
-        boid = boids[i] = new Boid();
-        boid.position.x = Math.random() * 400 - 200;
-        boid.position.y = Math.random() * 400 - 200;
-        boid.position.z = Math.random() * 400 - 200;
-        boid.velocity.x = Math.random() * 2 - 1;
-        boid.velocity.y = Math.random() * 2 - 1;
-        boid.velocity.z = Math.random() * 2 - 1;
-        boid.setAvoidWalls(true);
-        boid.setWorldSize(500, 500, 400);
-
-        bird = birds[i] = new THREE.Mesh(new Bird(), new THREE.MeshBasicMaterial({ color: Math.random() * 0xffffff, side: THREE.DoubleSide }));
-        bird.phase = Math.floor(Math.random() * 62.83);
-        scene.add(bird);
-    }
-}
-
-function loadObj(path, callbackOnSuccess) {
-    var obj;
-    var mtlLoader = new THREE.MTLLoader();
-    mtlLoader.setTexturePath(path);
-    mtlLoader.load(path + "lighthouse.mtl", function (materials) {
-        materials.preload();
-        var objLoader = new THREE.OBJLoader();
-        objLoader.setMaterials(materials);
-        objLoader.load(path + "lighthouse.obj",
-        //On Success
-        function (object) {
-            obj = object;
-            object.position.set(0, -3, -10);
-            object.scale.set(0.4, 0.4, 0.4);
-
-            scene.add(obj);
-        },
-        //On Progress
-        function () {
-            console.warn("OnProgress");
-        },
-        //On Error
-        function () {
-            console.error("Obj not loaded");
-        });
-    });
+var cube;
+function initPostProcessing() {
+	composer = new THREE.EffectComposer(renderer);
+	composer.addPass(new THREE.RenderPass(scene, camera));
+	outlinePass = new THREE.OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), scene, camera);
+	composer.addPass(outlinePass);
+	glitchPass = new THREE.GlitchPass();
+	glitchPass.renderToScreen = true;
+	composer.addPass(glitchPass);
 }
 
 function animate(e) {
-    requestAnimationFrame(animate);
-    animateBirds();
-    seaShader.uniforms.uTime.value = e * 0.001;
-    controls.update();
-    renderer.render(scene, camera);
+	requestAnimationFrame(animate);
+	stats.begin();
+	controls.update();
+	stats.end();
+	composer.render();
+	// renderer.render( scene, camera );
+	// cssRenderer.render(cssScene, camera);
 }
 
-function animateBirds() {
-    for (var i = 0, il = birds.length; i < il; i++) {
-
-        boid = boids[i];
-        boid.run(boids);
-
-        bird = birds[i];
-        bird.position.copy(boids[i].position);
-
-        var color = bird.material.color;
-        color.r = color.g = color.b = (500 - bird.position.z) / 1000;
-
-        bird.rotation.y = Math.atan2(-boid.velocity.z, boid.velocity.x);
-        bird.rotation.z = Math.asin(boid.velocity.y / boid.velocity.length());
-
-        bird.phase = (bird.phase + (Math.max(0, bird.rotation.z) + 0.1)) % 62.83;
-        bird.geometry.vertices[5].y = bird.geometry.vertices[4].y = Math.sin(bird.phase) * 5;
-    }
-}
+init();
 //# sourceMappingURL=scene.js.map
