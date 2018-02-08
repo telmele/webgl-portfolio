@@ -1,9 +1,9 @@
 # HakunaMacouta Portfolio
 > portfolio gathering projects and stuffs that I'm proud off.
 
-[![npm](https://img.shields.io/npm/v/npm.svg)]()
-[![Bower](https://img.shields.io/bower/v/bootstrap.svg)]()
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg)]()
+[![npm](https://img.shields.io/npm/v/npm.svg)](https://www.npmjs.com/)
+[![Bower](https://img.shields.io/bower/v/bootstrap.svg)](https://bower.io/)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](./LICENSE)
 
 ## Build With
 * [Three JS](https://threejs.org) - WebGL Framework
