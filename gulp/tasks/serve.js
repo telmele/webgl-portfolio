@@ -30,5 +30,6 @@ gulp.task('serve:test', function () {
 const distConfig = config.dist;
 
 gulp.task('serve:dist', function () {
+	//TODO check if dist source are ok
 	browserSync(distConfig.browsersync);
 });
