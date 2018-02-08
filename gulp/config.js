@@ -46,6 +46,7 @@ module.exports = {
 		}
 	},
 	scripts: {
+		"entry" : jsDir + "/scene.js",
 		"src": jsDir + "/**/*.js",
 		"dest": tmp + "/js"
 	},
@@ -84,7 +85,8 @@ module.exports = {
 		],
 		"watch": {
 			"styles": styleDir + "/**/*",
-			"fonts": src + "/fonts/**/*"
+			"fonts": src + "/fonts/**/*",
+			"scripts" : jsDir + "/**/*.js"
 		},
 		"test": {
 			"browsersync": {

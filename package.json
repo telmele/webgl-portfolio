@@ -1,13 +1,13 @@
 {
 	"name": "portofolio_v2",
 	"version": "1.0.0",
-	"description": "",
-	"main": "index.js",
+	"description": "Portfolio",
+	"main": "scene.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"author": "Thomas Blanc",
-	"license": "ISC",
+	"license": "MIT",
 	"devDependencies": {
 		"babel-core": "^6.26.0",
 		"babel-preset-env": "^1.6.1",
@@ -41,6 +41,7 @@
 		"wiredep": "^4.0.0"
 	},
 	"dependencies": {
+		"postprocessing": "^4.1.0",
 		"three": "^0.89.0"
 	}
 }

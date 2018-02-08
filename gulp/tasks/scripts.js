@@ -9,6 +9,14 @@ const $ = require("gulp-load-plugins")();
 const config = require("../config").scripts;
 
 gulp.task('scripts', function() {
+		gulp.src(config.entry)
+			.pipe($.browserify({
+				insertGlobals : true
+			}))
+			.pipe(gulp.dest(config.dest));
+});
+
+gulp.task('scripts:dist', function() {
     return gulp.src(config.src)
         .pipe($.plumber())
         .pipe($.sourcemaps.init())
@@ -16,3 +24,5 @@ gulp.task('scripts', function() {
         .pipe($.sourcemaps.write('.'))
         .pipe(gulp.dest(config.dest));
 });
+
+
