@@ -1,29 +1,29 @@
 # HakunaMacouta Portfolio
 > portfolio gathering projects and stuffs that I'm proud off.
 
-[![NPM Version][npm-image]][npm-url]
+[![npm](https://img.shields.io/npm/v/npm.svg)]()
+[![Bower](https://img.shields.io/bower/v/bootstrap.svg)]()
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)]()
 
-One to two paragraph statement about your product and what it does.
-
-![](header.png)
+## Build With
+* [Three JS](https://threejs.org) - WebGL Framework
 
 ## Release History
-
 * 0.1.2
-    * PostProcessing
-    * Colors
+    * ADD : PostProcessing
+    * FIX : Colors
 * 0.1.1
-    * Split objects
-    * Outline
+    * FIX : Split objects
+    * ADD : Outline
 * 0.1.0
-    * Scrap everything
-    * Workshop
+    * CHANGE : Scrap everything
+    * ADD : Workshop
 * 0.0.3
-    * Sea
-    * Birds
+    * ADD : Sea
+    * ADD : Birds
 * 0.0.2
-    * Skybox
-    * Lighthouse    
+    * ADD : Skybox
+    * ADD : Lighthouse    
 * 0.0.1
     * Starting project
 
@@ -33,10 +33,4 @@ One to two paragraph statement about your product and what it does.
 
 Distributed under the MIT license. See [``LICENSE``](https://github.com/HakunaMacouta/Portfolio/blob/master/LICENSE) for more information.
 
-<!-- Markdown link & img dfn's -->
-[npm-image]: https://img.shields.io/npm/v/datadog-metrics.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/datadog-metrics
-[npm-downloads]: https://img.shields.io/npm/dm/datadog-metrics.svg?style=flat-square
-[travis-image]: https://img.shields.io/travis/dbader/node-datadog-metrics/master.svg?style=flat-square
-[travis-url]: https://travis-ci.org/dbader/node-datadog-metrics
-[wiki]: https://github.com/yourname/yourproject/wiki
+
