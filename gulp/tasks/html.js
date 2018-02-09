@@ -5,19 +5,16 @@
  **/
 "use strict";
 
-var gulp = require("gulp");
-var $ = require("gulp-load-plugins")();
-var config = require("../config").html;
+const  gulp = require("gulp");
+const  $ = require("gulp-load-plugins")();
+const config = require("../config").html;
+const cssnano = require('cssnano');
 
-gulp.task('html', ['clean','styles', 'scripts'], function() {
-
-    return gulp.src(config.src + '/*.html')
-	    .pipe($.plumber())
-        .pipe($.useref({
-            searchPath: config.useref.searchPath
-        }))
-        .pipe($.if('*.js', $.uglify()))
-        .pipe($.if('*.css', $.cssnano(config.cssNano)))
-        .pipe($.if('*.html', $.htmlmin(config.htmlmin)))
-        .pipe(gulp.dest(config.dest));
+gulp.task('html', ['styles', 'scripts'], function () {
+	return gulp.src('app/*.html')
+		.pipe($.useref(config.useref))
+		.pipe($.if(/\.js$/, $.uglify(config.uglify)))
+		.pipe($.if(/\.css$/, $.postcss([cssnano()])))
+		.pipe($.if(/\.html$/, $.htmlmin(config.htmlmin)))
+		.pipe(gulp.dest('dist'));
 });

@@ -7,12 +7,15 @@
 const gulp = require("gulp");
 const $ = require("gulp-load-plugins")();
 const config = require("../config").scripts;
+const browserSync = require('browser-sync').create();
+const reload = browserSync.reload;
 
-gulp.task('scripts', function() {
-    return gulp.src(config.src)
-        .pipe($.plumber())
-        .pipe($.sourcemaps.init())
-        .pipe($.babel())
-        .pipe($.sourcemaps.write('.'))
-        .pipe(gulp.dest(config.dest));
+gulp.task('scripts', ['lint'], function () {
+	return gulp.src(config.src)
+		.pipe($.plumber())
+		.pipe($.sourcemaps.init())
+		.pipe($.babel())
+		.pipe($.sourcemaps.write('.'))
+		.pipe(gulp.dest(config.dest))
+		.pipe(reload({stream: true}));
 });

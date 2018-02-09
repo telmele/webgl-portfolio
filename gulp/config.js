@@ -14,28 +14,21 @@ const langDir = src + "/lang";
 
 module.exports = {
 	html: {
-		"src": src,
+		"src": src + "/*.html",
 		"dest": dest,
-		"useref": {
-			"searchPath": [
-				'.tmp',
-			]
-		},
-		"cssNano": {
-			"preset": [
-				"default",
-				{
-					"discardComments": {
-						"removeAll": true
-					}
-				}
-			]
-		},
+		"useref": {searchPath: ['.tmp', 'app', '.']},
+		"cssNano": {safe: true, autoprefixer: false},
 		"htmlmin": {
-			"collapseWhitespace": true,
-			"minifyCSS": true,
-			"minifyJS": true,
-		}
+			collapseWhitespace: true,
+			minifyCSS: true,
+			minifyJS: {compress: {drop_console: true}},
+			processConditionalComments: true,
+			removeComments: true,
+			removeEmptyAttributes: true,
+			removeScriptTypeAttributes: true,
+			removeStyleLinkTypeAttributes: true
+		},
+		"uglify": {compress: {drop_console: true}}
 	},
 	styles: {
 		"src": styleDir + "/*",
@@ -49,17 +42,6 @@ module.exports = {
 		"src": jsDir + "/**/*.js",
 		"dest": tmp + "/js"
 	},
-	img: {
-		"src": imgDir + "/**/*",
-		"dest": dest + "/images",
-		"imagemin": {
-			"progressive": true,
-			"svgoPlugins": [{
-				"removeViewBox": false,
-				"cleanupIDs": false
-			}]
-		}
-	},
 	fonts: {
 		"src": src + "/fonts/**/*",
 		"dest": dest + "/fonts",
@@ -69,7 +51,7 @@ module.exports = {
 		"browsersync": {
 			"port": 9000,
 			"server": {
-				"baseDir": [tmp, src],
+				"baseDir": [src],
 				"routes": {
 					"/bower_components": "bower_components"
 				}
@@ -78,30 +60,12 @@ module.exports = {
 		"watch_reload": [
 			src + "/*.html",
 			src + "/img/**/*",
-			tmp + "/fonts/**/*",
-			tmp + "/css/**/*.css",
-			jsDir + "/**/*.js"
+			tmp + "/fonts/**/*"
 		],
 		"watch": {
-			"styles": styleDir + "/**/*",
-			"fonts": src + "/fonts/**/*"
-		},
-		"test": {
-			"browsersync": {
-				"notify": false,
-				"port": 9001,
-				"ui": false,
-				"server": {
-					"baseDir": "test",
-					routes: {
-						'/scripts': 'app/scripts',
-						'/bower_components': 'bower_components'
-					}
-				}
-			},
-			"watch": {
-				"spec": "test/spec/**/*.js"
-			}
+			"styles": styleDir + "/**/*.css",
+			"fonts": src + "/fonts/**/*",
+			"scripts": jsDir + '/**/*.js'
 		},
 		"dist": {
 			"browsersync": {
@@ -122,33 +86,29 @@ module.exports = {
 			"stream": true,
 			"once": true
 		},
+		eslint: {fix: true},
 		"src": src + "/scripts/**/*.js",
-		"test": {
-			"src": "test/spec/**/*.js",
-			"options": {
-				"env": {
-					"node": true,
-					"mocha": true
-				}
-			}
-		}
+		"dest": src
+	},
+	wiredep: {
+		src: src + '/*.html',
+		wiredep: {
+			ignorePath: /^(\.\.\/)*\.\./
+		},
+		dest: src
 	},
 	build: {
-		src: src + "/**/*",
-		dest: dest,
+		src: dest + "/**/*",
 		size: {
 			title: 'build',
 			gzip: true
 		}
 	},
 	extras: {
-		"src": [
-			src + "*.*",
-			"!" + src + "/*.html"
+		src: [
+			src + '/*',
+			'!app/*.html'
 		],
-		"options": {
-			"dot": true
-		},
-		"dest": dest
+		dest: dest
 	}
 };

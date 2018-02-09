@@ -10,5 +10,6 @@ gulp.task('styles', function () {
 		.pipe($.sourcemaps.init())
 		.pipe($.autoprefixer(config.autoprefixer))
 		.pipe($.sourcemaps.write())
-		.pipe(gulp.dest(config.dest));
+		.pipe(gulp.dest(config.dest))
+		.pipe(reload({stream: true}));
 });
