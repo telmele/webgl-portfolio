@@ -16,6 +16,7 @@ gulp.task('serve', function () {
 
 	gulp.watch(config.watch_reload).on('change', reload);
 
+	gulp.watch(config.watch.scripts, ['scripts']);
 	gulp.watch(config.watch.styles, ['styles']);
 	gulp.watch(config.watch.fonts, ['fonts']);
 	gulp.watch(config.watch.scripts, ['scripts']);

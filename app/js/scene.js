@@ -81,13 +81,8 @@ function initScene() {
 	/** WORKSHOP LOADER **/
 	var mtlLoader = new THREE.MTLLoader();
 	mtlLoader.load( "../model/workshop/materials.mtl", function( materials ) {
-		console.log(materials.getAsArray());
 		for(var i = 0; i < materials.getAsArray().length; i++) {
 			var mat = materials.getAsArray()[i];
-			// mat.emissiveIntensity = 0;
-			// mat.emissiveLight = 0;
-			// mat.emissive = new THREE.Color (0x000000);
-
 			if(mat.name === "mat2") {
 				mat.emissive = new THREE.Color( 0xddddff);
 				mat.emissiveLight = 1;
@@ -109,7 +104,6 @@ function initScene() {
 				mat.emissiveIntensity = 0.3;
 			}
 		}
-		console.log(materials);
 		var objLoader = new THREE.OBJLoader();
 		objLoader.setMaterials( materials );
 		objLoader.load( "../model/workshop/model.obj", function(object) {
@@ -132,7 +126,7 @@ function initScene() {
 						object.children.splice(i, 1);
 						ipod = mesh;
 						scene.add(ipod);
-						// ipod.scale.set(6,6,6);
+						ipod.scale.set(6,6,6);
 						break;
 					case "mesh466027787":
 						object.children.splice(i, 1);
@@ -146,6 +140,15 @@ function initScene() {
 						scene.add(headset);
 						headset.scale.set(6,6,6);
 						break;
+					case "mesh1079008815":
+						object.children.splice(i, 1);
+						laptop = mesh;
+						scene.add(laptop);
+						laptop.scale.set(6,6,6);
+						break;
+					case "mesh1592160675" :
+					case "mesh2013451613":
+						object.children.splice(i, 1);
 					default:
 				}
 			}

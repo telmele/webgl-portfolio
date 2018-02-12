@@ -107,7 +107,8 @@ module.exports = {
 	extras: {
 		src: [
 			src + '/*',
-			'!app/*.html'
+			'!app/*.html',
+			src + '/model/**/*'
 		],
 		dest: dest
 	}
