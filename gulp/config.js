@@ -8,7 +8,7 @@ const src = "./app";
 const dest = "./dist";
 const tmp = "./.tmp";
 const jsDir = src + "/js";
-const styleDir = src + "/css";
+const styleDir = src + "/scss";
 const imgDir = src + "/images";
 const langDir = src + "/lang";
 
@@ -28,11 +28,14 @@ module.exports = {
 			removeScriptTypeAttributes: true,
 			removeStyleLinkTypeAttributes: true
 		},
+		"international": {
+			locales : src + "/lang"
+		},
 		"uglify": {compress: {drop_console: true}}
 	},
 	styles: {
 		"src": styleDir + "/*",
-		"dest": tmp + "/css",
+		"dest": src + "/css",
 		"autoprefixer": {
 			"browsers": ['last 2 versions'],
 			"cascade": false
@@ -63,7 +66,7 @@ module.exports = {
 			tmp + "/fonts/**/*"
 		],
 		"watch": {
-			"styles": styleDir + "/**/*.css",
+			"styles": styleDir + "/**/*.scss",
 			"fonts": src + "/fonts/**/*",
 			"scripts": jsDir + '/**/*.js'
 		},
@@ -110,6 +113,11 @@ module.exports = {
 			'!app/*.html',
 			src + '/model/**/*'
 		],
+		dest: dest
+	},
+	international: {
+		lang : src + "/lang",
+		src: src + "/index.html",
 		dest: dest
 	}
 };

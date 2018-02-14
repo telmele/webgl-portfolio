@@ -10,10 +10,9 @@
 var camera, controls, scene, stats, renderer;
 var cssScene, cssRenderer;
 var composer, glitchPass, outlinePass;
-var poster, wire, ipod, headset;
+var poster, wire, ipod, headset, bird;
 var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();
-
 
 const modelScale = 6;
 const SHADOW_MAP_WIDTH = 512;
@@ -61,6 +60,16 @@ function initScene() {
 		mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 		mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 	}, false );
+	window.addEventListener('mousedown', function() {
+		raycaster.setFromCamera( mouse, camera );
+		// calculate objects intersecting the picking ray
+		var intersects = raycaster.intersectObjects( scene.children );
+		if(intersects.length > 0) {
+			if(intersects[0].object.callback) {
+				intersects[0].object.callback();
+			}
+		}
+	});
 
 	/** RENDERER **/
 	renderer = new THREE.WebGLRenderer( { antialias: true });
@@ -116,45 +125,71 @@ function initScene() {
 				mesh.receiveShadow = true;
 				switch(mesh.name) {
 					case "mesh1854588575":
-						console.log(mesh);
 						object.children.splice(i, 1);
 						poster = mesh;
 						scene.add(poster);
 						poster.scale.set(6,6,6);
-						break;
-					case "mesh1845611640":
-						object.children.splice(i, 1);
-						ipod = mesh;
-						scene.add(ipod);
-						ipod.scale.set(6,6,6);
-						break;
-					case "mesh466027787":
-						object.children.splice(i, 1);
-						wire = mesh;
-						scene.add(wire);
-						wire.scale.set(6,6,6);
+						poster.callback = function() {
+							var html = document.getElementById("about");
+							closeModal();
+							modalOpened = html;
+							html.className += ' ' + 'is-active';
+						};
 						break;
 					case "mesh850969638":
 						object.children.splice(i, 1);
 						headset = mesh;
 						scene.add(headset);
 						headset.scale.set(6,6,6);
+						headset.callback = function() {
+							var html = document.getElementById("spotify");
+							closeModal();
+							modalOpened = html;
+							html.className += ' ' + 'is-active';
+						};
 						break;
 					case "mesh1079008815":
 						object.children.splice(i, 1);
 						laptop = mesh;
 						scene.add(laptop);
+						laptop.callback = function () {
+							var html = document.getElementById("work");
+							closeModal();
+							modalOpened = html;
+							html.className += ' ' + 'is-active';
+						}
 						laptop.scale.set(6,6,6);
 						break;
 					case "mesh1592160675" :
 					case "mesh2013451613":
 						object.children.splice(i, 1);
+						scene.remove(mesh);
 					default:
 				}
 			}
 			scene.add(object);
 		});
 	});
+	/** BIRD LOADER **/
+	mtlLoader.setTexturePath("../model/twitter/");
+	mtlLoader.load( "../model/twitter/WesternBluebird.mtl", function( materials ) {
+		var objLoader = new THREE.OBJLoader();
+		materials.getAsArray()[0].color = new THREE.Color(0xffffff);
+		materials.preload();
+		objLoader.setMaterials(materials);
+		objLoader.load("../model/twitter/WesternBluebird.obj", function(object) {
+			bird = object.children[0];
+			bird.rotation.y = - Math.PI;
+			bird.position.set(0,3.25,7);
+			bird.callback = function() {
+				var html = document.getElementById("twitter");
+				closeModal();
+				modalOpened = html;
+				html.className += ' ' + 'is-active';
+			};
+			scene.add(bird);
+		})
+	})
 }
 
 function initLights() {
@@ -229,5 +264,6 @@ function animate(e) {
 	// cssRenderer.render(cssScene, camera);
 
 }
+
 
 init();
