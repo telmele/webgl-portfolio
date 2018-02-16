@@ -29,7 +29,10 @@ module.exports = {
 			removeStyleLinkTypeAttributes: true
 		},
 		"international": {
-			locales : src + "/lang"
+			locales : src + "/lang",
+			filename : '${name}-${lang}.${ext}',
+			delimiter : { prefix: '${', suffix: '}'
+			}
 		},
 		"uglify": {compress: {drop_console: true}}
 	},
@@ -109,11 +112,10 @@ module.exports = {
 	},
 	extras: {
 		src: [
-			src + '/*',
-			'!app/*.html',
 			src + '/model/**/*'
+			// src + '/model/**/*'
 		],
-		dest: dest
+		dest: dest + '/model'
 	},
 	international: {
 		lang : src + "/lang",

@@ -42,8 +42,7 @@
 		"wiredep": "^4.0.0"
 	},
 	"dependencies": {
-		"bulma-pageloader": "^1.0.0",
-		"postprocessing": "^4.1.0",
-		"three": "^0.89.0"
+		"gutil": "^1.6.4",
+		"node-sass": "^4.7.2"
 	}
 }

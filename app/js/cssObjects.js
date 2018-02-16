@@ -7,12 +7,3 @@
  * ----------------------------------------------------------------------------
  */
 
-function initCSS3D() {
-	about();
-}
-
-function about() {
-	var element = document.getElementById("html");
-	var cssObject = new THREE.CSS3DObject( element );
-	scene.add(cssObject);
-}

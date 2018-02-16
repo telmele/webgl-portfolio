@@ -8,6 +8,23 @@
  */
 
 var modalOpened = document.getElementById('about');
+var menuBtn = document.getElementById('btnMenu');
+var menu = document.getElementById('menu');
+
+menu.style.left = "-" + menu.offsetWidth + "px";
+
+var menuOpened = false;
+menuBtn.addEventListener('mousedown', function() {
+	closeModal();
+	if (menuOpened) {
+		anime({targets : menu, translateX : 0, easing : 'easeInQuad'});
+	} else {
+		anime({targets : menu, translateX : menu.offsetWidth, easing : 'easeInQuad' });
+	}
+	menuOpened = !menuOpened;
+
+});
+
 
 /**
  *  Set modal class to close it
@@ -16,12 +33,19 @@ function closeModal() {
 	modalOpened.className = "modal";
 }
 
+function openModal(el) {
+	var html = document.getElementById(el.getAttribute("data-target"));
+	closeModal();
+	modalOpened = html;
+	html.className += ' ' + 'is-active';
+	triggerGlitch();
+}
+
 /**
  * Press escape to close active modal
  * @param evt event catched by js
  */
 document.onkeydown = function(evt) {
-	var isEscape = false;
 	evt = evt || window.event;
 	var isEscape = false;
 	if ("key" in evt) {

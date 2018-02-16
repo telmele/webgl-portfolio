@@ -7,19 +7,19 @@
  * ----------------------------------------------------------------------------
  */
 
-var camera, controls, scene, stats, renderer;
+var prod = true;
+
+var camera, controls, scene, stats, renderer, loadingMananger;
 var cssScene, cssRenderer;
-var composer, glitchPass, outlinePass;
-var poster, wire, ipod, headset, bird;
+var composer, glitchPass, outlinePass, clock;
+var poster, headset, bird, controller, laptop;
 var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();
-
 const modelScale = 6;
-const SHADOW_MAP_WIDTH = 512;
-const SHADOW_MAP_HEIGHT = 512;
 
 function init() {
 	initScene();
+	initRenderers();
 	initCSS3D();
 	initLights();
 	initPostProcessing();
@@ -31,6 +31,7 @@ function initScene() {
 	camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 1000 );
 	camera.position.set( 15, 5, 0 );
 
+	clock = new THREE.Clock();
 	/** CONTROLS **/
 	controls = new THREE.OrbitControls(camera);
 	controls.enableZoom = false;
@@ -39,27 +40,31 @@ function initScene() {
 	controls.minAzimuthAngle = Math.PI/2;
 	controls.maxAzimuthAngle = Math.PI;
 	controls.update();
+
 	/** SCENE **/
 	scene = new THREE.Scene();
 	window.scene = scene;
 	cssScene = new THREE.Scene();
-	scene.background = new THREE.Color( 0x000000 );
+	scene.background = new THREE.Color( 0x222222 );
 
-	/** HELPERS **/
-	// X AXIS IS RED // Y AXIS IS GREEN // Z AXIS IS BLUE
+	if(!prod) {
+		stats = new Stats();
+		document.body.appendChild( stats.dom );
+	}
 
-	stats = new Stats();
-	document.body.appendChild( stats.dom );
 	/** CALLBACKS **/
+	/** Scale canvas to window size */
 	window.addEventListener( 'resize', function() {
 		camera.aspect = window.innerWidth / window.innerHeight;
 		camera.updateProjectionMatrix();
 		renderer.setSize( window.innerWidth, window.innerHeight );
 	}, false );
+	/** Normalize mouse postion when mooving */
 	window.addEventListener( 'mousemove', function() {
 		mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 		mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 	}, false );
+	/** Call the callback set to object if it exists */
 	window.addEventListener('mousedown', function() {
 		raycaster.setFromCamera( mouse, camera );
 		// calculate objects intersecting the picking ray
@@ -70,22 +75,6 @@ function initScene() {
 			}
 		}
 	});
-
-	/** RENDERER **/
-	renderer = new THREE.WebGLRenderer( { antialias: true });
-	renderer.setPixelRatio( window.devicePixelRatio );
-	renderer.setSize( window.innerWidth, window.innerHeight );
-	renderer.shadowMap.enabled = true;
-	renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-	// renderer.shadowMap.type = THREE.BasicShadowMap;
-	document.body.appendChild( renderer.domElement );
-
-	/** CSS RENDERER **/
-	cssRenderer = new THREE.CSS3DRenderer();
-	cssRenderer.setSize( window.innerWidth, window.innerHeight );
-	cssRenderer.domElement.style.position = 'absolute';
-	cssRenderer.domElement.style.top = 0;
-	document.body.appendChild( cssRenderer.domElement );
 
 	/** WORKSHOP LOADER **/
 	var mtlLoader = new THREE.MTLLoader();
@@ -130,10 +119,12 @@ function initScene() {
 						scene.add(poster);
 						poster.scale.set(6,6,6);
 						poster.callback = function() {
-							var html = document.getElementById("about");
+							var html = document.getElementById("graphic");
 							closeModal();
 							modalOpened = html;
 							html.className += ' ' + 'is-active';
+							triggerGlitch();
+
 						};
 						break;
 					case "mesh850969638":
@@ -146,6 +137,8 @@ function initScene() {
 							closeModal();
 							modalOpened = html;
 							html.className += ' ' + 'is-active';
+							triggerGlitch();
+
 						};
 						break;
 					case "mesh1079008815":
@@ -157,7 +150,8 @@ function initScene() {
 							closeModal();
 							modalOpened = html;
 							html.className += ' ' + 'is-active';
-						}
+							triggerGlitch();
+						};
 						laptop.scale.set(6,6,6);
 						break;
 					case "mesh1592160675" :
@@ -170,7 +164,12 @@ function initScene() {
 			scene.add(object);
 		});
 	});
-	/** BIRD LOADER **/
+
+	/**
+	 * Bird loader
+	 * @type {THREE.MTLLoader}
+	 */
+	mtlLoader = new THREE.MTLLoader();
 	mtlLoader.setTexturePath("../model/twitter/");
 	mtlLoader.load( "../model/twitter/WesternBluebird.mtl", function( materials ) {
 		var objLoader = new THREE.OBJLoader();
@@ -186,14 +185,73 @@ function initScene() {
 				closeModal();
 				modalOpened = html;
 				html.className += ' ' + 'is-active';
+				triggerGlitch();
 			};
 			scene.add(bird);
 		})
-	})
+	});
+
+	/**
+	 * Controller loader
+	 */
+	mtlLoader = new THREE.MTLLoader();
+	mtlLoader.setTexturePath("../model/controller/");
+	mtlLoader.load( "../model/controller/controller.mtl", function( materials ) {
+		var objLoader = new THREE.OBJLoader();
+		materials.getAsArray()[0].color = new THREE.Color(0xffffff);
+		materials.preload();
+		objLoader.setMaterials(materials);
+		objLoader.load("../model/controller/controller.obj", function(object) {
+			controller = object.children[0];
+			controller.scale.set(0.04,0.04,0.04);
+			controller.position.set(-1.2,-1.3,3);
+			controller.rotation.y = Math.PI/2;
+			controller.callback = function() {
+				var html = document.getElementById("gamejam");
+				closeModal();
+				modalOpened = html;
+				html.className += ' ' + 'is-active';
+				triggerGlitch();
+			};
+			scene.add(controller);
+		})
+	});
 }
 
-function initLights() {
+/**
+ * Init normal and css3D renderers and attach them to DOM
+ */
+function initRenderers() {
+	/** RENDERER **/
+	renderer = new THREE.WebGLRenderer( { antialias: true });
+	renderer.setPixelRatio( window.devicePixelRatio );
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	renderer.shadowMap.enabled = true;
+	renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+	// renderer.shadowMap.type = THREE.BasicShadowMap;
+	document.body.appendChild( renderer.domElement );
 
+	/** CSS RENDERER **/
+	cssRenderer = new THREE.CSS3DRenderer();
+	cssRenderer.setSize( window.innerWidth, window.innerHeight );
+	cssRenderer.domElement.style.position = 'absolute';
+	cssRenderer.domElement.style.top = 0;
+	document.body.appendChild( cssRenderer.domElement );
+}
+
+/**
+ * Construct CSS3D object containing all html and add it to scene
+ */
+function initCSS3D() {
+	var element = document.getElementById("html");
+	var cssObject = new THREE.CSS3DObject( element );
+	scene.add(cssObject);
+}
+
+/**
+ * Construct and add to scene 3 lights : Spotlight, laptop and neon
+ */
+function initLights() {
 	var neon = new THREE.PointLight( 0xddddff, 1, 8 );
 	neon.position.set( 0, 3.5, -4 );
 	neon.castShadow = true;
@@ -222,6 +280,9 @@ function initLights() {
 	// scene.add( spotLightHelper );
 }
 
+/**
+ * Construct and add to composer postprocessing : Outline, Film, Bloom
+ */
 function initPostProcessing() {
 	composer = new THREE.EffectComposer( renderer );
 	composer.addPass( new THREE.RenderPass( scene, camera ) );
@@ -242,14 +303,26 @@ function initPostProcessing() {
 	composer.addPass( bloomPass );
 
 
-	// glitchPass = new THREE.GlitchPass();
-	// glitchPass.renderToScreen = true;
-	// composer.addPass( glitchPass );
+	glitchPass = new THREE.GlitchPass();
+	composer.addPass( glitchPass );
 }
 
+function triggerGlitch() {
+	glitchPass.goWild = true;
+	glitchPass.renderToScreen = true;
+	setTimeout(function(){
+		glitchPass.goWild = false;
+		glitchPass.renderToScreen = false;
+	}, 350);
+
+}
+/**
+ * Called every frame, render scene and raycast the mouse
+ * @param e
+ */
 function animate(e) {
 	requestAnimationFrame( animate );
-	stats.begin();
+	if(!prod) { stats.begin(); }
 	controls.update();
 	raycaster.setFromCamera( mouse, camera );
 	// calculate objects intersecting the picking ray
@@ -258,12 +331,12 @@ function animate(e) {
 	if(intersects.length > 0) {
 		outlinePass.selectedObjects.push(intersects[0].object);
 	}
-	stats.end();
-	composer.render();
+	if(!prod) { stats.end(); }
+	var delta = clock.getDelta();
+	composer.render(delta);
 	// renderer.render( scene, camera );
 	// cssRenderer.render(cssScene, camera);
 
 }
-
 
 init();
