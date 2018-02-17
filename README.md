@@ -6,26 +6,9 @@
 [![license](https://img.shields.io/badge/license-BEERWARE-yellow.svg)](./LICENSE)
 
 ## Build With
-* [Three JS](https://threejs.org) - WebGL Framework
-
-## Release History
-* 0.1.2
-    * ADD : PostProcessing
-    * FIX : Colors
-* 0.1.1
-    * FIX : Split objects
-    * ADD : Outline
-* 0.1.0
-    * CHANGE : Scrap everything
-    * ADD : Workshop
-* 0.0.3
-    * ADD : Sea
-    * ADD : Birds
-* 0.0.2
-    * ADD : Skybox
-    * ADD : Lighthouse    
-* 0.0.1
-    * Starting project
+* [Three JS](https://threejs.org) - WebGL framework.
+* [Anime.js](http://animejs.com/) - Animation JS framework.
+* [Bulma](https://bulma.io/) - CSS framework.
 
 ## Meta
 
