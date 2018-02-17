@@ -15,7 +15,7 @@ gulp.task('html', ['styles', 'scripts'], function () {
 	return gulp.src('app/*.html')
 		.pipe($.international(config.international))
 		.pipe($.useref(config.useref))
-		.pipe($.if(/\.js$/, $.uglify(config.uglify)))
+		// .pipe($.if(/\.js$/, $.uglify(config.uglify)))
 		.pipe($.if(/\.css$/, $.postcss([cssnano()])))
 		.pipe($.if(/\.html$/, $.htmlmin(config.htmlmin)))
 		.pipe(gulp.dest('dist'));

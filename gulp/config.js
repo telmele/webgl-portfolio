@@ -112,8 +112,7 @@ module.exports = {
 	},
 	extras: {
 		src: [
-			src + '/model/**/*'
-			// src + '/model/**/*'
+			src + '/model/**/*',
 		],
 		dest: dest + '/model'
 	},
@@ -121,5 +120,9 @@ module.exports = {
 		lang : src + "/lang",
 		src: src + "/index.html",
 		dest: dest
+	},
+	image: {
+		src : src + "/img/**/*",
+		dest : dest + "/img"
 	}
 };

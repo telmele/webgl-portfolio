@@ -31,10 +31,13 @@ menuBtn.addEventListener('mousedown', function() {
  */
 function closeModal() {
 	modalOpened.className = "modal";
+	triggerGlitch();
 }
 
 function openModal(el) {
 	var html = document.getElementById(el.getAttribute("data-target"));
+	anime({targets : menu, translateX : 0, easing : 'easeInQuad'});
+	menuOpened = false;
 	closeModal();
 	modalOpened = html;
 	html.className += ' ' + 'is-active';
@@ -53,6 +56,7 @@ document.onkeydown = function(evt) {
 	} else {
 		isEscape = (evt.keyCode == 27);
 	}
+
 	if (isEscape) {
 		closeModal();
 	}
