@@ -12,7 +12,19 @@
   "spotify-title" : "",
   "twitter-title" : "",
   "work-title" : "",
-  "dev" : "",
+  "work-content" : "",
   "gamejam-title" : "",
-  "gamejam-content" : ""
+  "gamejam-content" : "",
+  "graphic-title" : "Design et vidéos",
+  "graphic-content" : "Posters et vidéos réalisés pour différents projets intra ou extrascolaire",
+  "copyright" : "Made with love by Thomas Blanc - 2018",
+  "about" : "A propos",
+  "social-network" : "Réseaux sociaux",
+  "front-end-content" : "",
+  "back-end-content" : "",
+  "tarot-content" : "",
+  "runner-content" : "",
+  "jpo-title" : "",
+  "jpo-content" : "",
+  "j34d-content" : ""
 }
