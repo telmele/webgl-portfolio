@@ -45,8 +45,6 @@
 <body>
 <div id="html">
 	<div id="wrapper">
-		<!-- NAVBAR -->
-		<!--NAVBAR END-->
 		<!--ABOUT-->
 		<div id="about" class="modal is-active">
 			<div class="modal-content">
@@ -78,7 +76,7 @@
 			</div>
 			<button onclick="closeModal(this.parentNode)" class="modal-close is-large" aria-label="close"></button>
 		</div>
-		<!--ABOUT END-->
+
 		<!--SPOTIFY-->
 		<div id="spotify" class="modal">
 			<div class="modal-content">
@@ -93,7 +91,7 @@
 			</div>
 			<button onclick="closeModal(this.parentNode)" class="modal-close is-large" aria-label="close"></button>
 		</div>
-		<!--SPOTIFY END-->
+
 		<!--TWITTER-->
 		<div id="twitter" class="modal">
 			<div class="modal-content">
@@ -197,7 +195,7 @@
 			</div>
 			<button onclick="closeModal(this.parentNode)" class="modal-close is-large" aria-label="close"></button>
 		</div>
-		<!--WORK END-->
+
 		<!--GAME JAMS-->
 		<div id="gamejam" class="modal">
 			<div class="modal-content">
@@ -286,7 +284,7 @@
 			</div>
 			<button onclick="closeModal(this.parentNode)" class="modal-close is-large" aria-label="close"></button>
 		</div>
-		<!--GAMEJAM END-->
+
 		<!--GRAPHIC-->
 		<div id="graphic" class="modal">
 			<div class="modal-content">
@@ -296,7 +294,7 @@
 				<section>
 					<h2>${graphic-content}</h2>
 					<div class='items'>
-						<div class='item'>
+						<a onclick="openModal(this)" data-target="jpo" class='item'>
 							<svg preserveAspectRatio='xMidYMid slice' viewBox='0 0 300 200'>
 								<defs>
 									<clipPath id='clip-8'>
@@ -313,7 +311,7 @@
 									</text>
 								</g>
 							</svg>
-						</div>
+						</a>
 						<a target="_blank" href="https://www.youtube.com/watch?v=A5GSHZMBxqw" class='item'>
 							<svg preserveAspectRatio='xMidYMid slice' viewBox='0 0 300 200'>
 								<defs>
@@ -332,7 +330,7 @@
 								</g>
 							</svg>
 						</a>
-						<div class='item'>
+						<a onclick="openModal(this)" data-target="abeii" class='item'>
 							<svg preserveAspectRatio='xMidYMid slice' viewBox='0 0 300 200'>
 								<defs>
 									<clipPath id='clip-10'>
@@ -349,7 +347,7 @@
 									</text>
 								</g>
 							</svg>
-						</div>
+						</a>
 					</div>
 				</section>
 				<footer>
@@ -392,6 +390,61 @@
 				</ul>
 				<p class="copyright">${copyright}</p>
 			</aside>
+		</div>
+
+		<!--JPO-->
+		<div id="jpo" class="modal">
+			<div class="modal-content">
+				<header>
+					<h1>${jpo-title}</h1>
+					<h2>${jpo-content}</h2>
+				</header>
+				<section>
+					<div class="columns">
+						<div class="column is-6-desktop">
+							<img src="../img/jpo_affiche.png" alt="">
+						</div>
+						<div class="column is-6-desktop">
+							<img src="../img/jpo_flyer_verso.png" alt="">
+						</div>
+					</div>
+					<div class="columns">
+						<div class="column is-6-desktop">
+							<img src="../img/jpo_programme_recto.jpg" alt="">
+						</div>
+						<div class="column is-6-desktop">
+							<img src="../img/jpo_programme_verso.jpg" alt="">
+						</div>
+					</div>
+					<div class="columns">
+						<div class="column is-6-desktop">
+							<img src="../img/plan2etage.jpg" alt="">
+						</div>
+						<div class="column is-6-desktop">
+							<img src="../img/plan3etage.jpg" alt="">
+						</div>
+					</div>
+				</section>
+				<footer>
+				</footer>
+			</div>
+			<button onclick="closeModal(this.parentNode)" class="modal-close is-large" aria-label="close"></button>
+		</div>
+
+		<!--ABEII-->
+		<div id="abeii" class="modal">
+			<div class="modal-content">
+				<header>
+					<h1>${abeii-title}</h1>
+					<h2>${abeii-content}</h2>
+				</header>
+				<section>
+					<img src="../img/AfficheSI.png" alt="">
+				</section>
+				<footer>
+				</footer>
+			</div>
+			<button onclick="closeModal(this.parentNode)" class="modal-close is-large" aria-label="close"></button>
 		</div>
 	</div>
 </div>

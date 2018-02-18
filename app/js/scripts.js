@@ -37,7 +37,7 @@ function closeModal() {
 function openModal(el) {
 	var html = document.getElementById(el.getAttribute("data-target"));
 	anime({targets : menu, translateX : 0, easing : 'easeInQuad'});
-	menuOpened = false;
+	menuOpened = !menuOpened;
 	closeModal();
 	modalOpened = html;
 	html.className += ' ' + 'is-active';

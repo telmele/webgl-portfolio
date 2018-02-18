@@ -16,11 +16,16 @@ var poster, headset, bird, controller, laptop;
 var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();
 const modelScale = 6;
+const RADIUS = 100;
+const SPHERE_NB = 100;
+const COLORS = [0xeeeeee];
+var spheres = [];
 
 function init() {
 	initScene();
 	initRenderers();
 	initCSS3D();
+	initBackground();
 	initLights();
 	initPostProcessing();
 	animate();
@@ -45,7 +50,7 @@ function initScene() {
 	scene = new THREE.Scene();
 	window.scene = scene;
 	cssScene = new THREE.Scene();
-	scene.background = new THREE.Color( 0x222222 );
+	scene.background = new THREE.Color( 0x17181b);
 
 	if(!prod) {
 		stats = new Stats();
@@ -76,7 +81,9 @@ function initScene() {
 		}
 	});
 
-	/** WORKSHOP LOADER **/
+	/**
+	 *	Workshop loader
+	 */
 	var mtlLoader = new THREE.MTLLoader();
 	mtlLoader.load( "../model/workshop/materials.mtl", function( materials ) {
 		for(var i = 0; i < materials.getAsArray().length; i++) {
@@ -123,6 +130,8 @@ function initScene() {
 							closeModal();
 							modalOpened = html;
 							html.className += ' ' + 'is-active';
+							anime({targets : menu, translateX : 0, easing : 'easeInQuad'});
+							menuOpened = !menuOpened;
 							triggerGlitch();
 
 						};
@@ -137,6 +146,8 @@ function initScene() {
 							closeModal();
 							modalOpened = html;
 							html.className += ' ' + 'is-active';
+							anime({targets : menu, translateX : 0, easing : 'easeInQuad'});
+							menuOpened = !menuOpened;
 							triggerGlitch();
 
 						};
@@ -150,6 +161,8 @@ function initScene() {
 							closeModal();
 							modalOpened = html;
 							html.className += ' ' + 'is-active';
+							anime({targets : menu, translateX : 0, easing : 'easeInQuad'});
+							menuOpened = !menuOpened;
 							triggerGlitch();
 						};
 						laptop.scale.set(6,6,6);
@@ -185,6 +198,8 @@ function initScene() {
 				closeModal();
 				modalOpened = html;
 				html.className += ' ' + 'is-active';
+				anime({targets : menu, translateX : 0, easing : 'easeInQuad'});
+				menuOpened = !menuOpened;
 				triggerGlitch();
 			};
 			scene.add(bird);
@@ -211,6 +226,8 @@ function initScene() {
 				closeModal();
 				modalOpened = html;
 				html.className += ' ' + 'is-active';
+				anime({targets : menu, translateX : 0, easing : 'easeInQuad'});
+				menuOpened = !menuOpened;
 				triggerGlitch();
 			};
 			scene.add(controller);
@@ -248,6 +265,28 @@ function initCSS3D() {
 	scene.add(cssObject);
 }
 
+function getRandomInt(min, max) {
+	min = Math.ceil(min);
+	max = Math.floor(max);
+	return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function initBackground() {
+	for(var i = 0; i < SPHERE_NB; i++) {
+		var geometry = new THREE.SphereGeometry(getRandomInt(1,2),  10, 10 );
+		var material = new THREE.MeshBasicMaterial( { color: COLORS[Math.floor(Math.random() * Math.floor(COLORS.length))] } );
+		geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, RADIUS, 0 ) );
+		var mesh = new THREE.Mesh( geometry, material );
+
+		mesh.rotation.x = getRandomInt(0,100);
+		mesh.rotation.y = getRandomInt(0,100);
+		mesh.rotation.z = getRandomInt(0,100);
+
+		scene.add( mesh );
+
+		spheres.push( mesh );
+	}
+}
 /**
  * Construct and add to scene 3 lights : Spotlight, laptop and neon
  */
@@ -331,6 +370,13 @@ function animate(e) {
 	if(intersects.length > 0) {
 		outlinePass.selectedObjects.push(intersects[0].object);
 	}
+	for (var i = 0; i < spheres.length; i++) {
+		spheres[i].rotation.x += 0.001;
+		spheres[i].rotation.y += 0.001;
+		spheres[i].rotation.z += 0.001;
+
+	}
+
 	if(!prod) { stats.end(); }
 	var delta = clock.getDelta();
 	composer.render(delta);

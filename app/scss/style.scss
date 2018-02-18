@@ -2,6 +2,9 @@
 
 body, html, #html, canvas {
 	height: 100vh;
+	overflow: hidden;
+}
+body {
 }
 #html {
 	width:100%;
@@ -198,4 +201,17 @@ button.navbar-burger {
 	color: #1a1a1a;
 	position:absolute;
 	bottom: 0;
+}
+
+#jpo {
+	.modal-content {
+		overflow-y: scroll;
+		overflow-x : hidden;
+	}
+}
+
+#abeii {
+	img {
+		width:80%;
+	}
 }
