@@ -1,5 +1,7 @@
 {
   "lang" : "fr",
+  "description" : "Portfolio d'un jeune développeur web, révant de devenir game designer et de monter un studio indépendant. Vous trouverez sur le site mes réalisations vidéoludiques, en développement et graphique.",
+  "keywords" : "Portfolio, Développeur Web, Game Design",
   "title" : "Thomas Blanc - Développeur Web | Game Designer",
   "about-subtitle" : "\"HakunaMacouta\" - et j'aime ",
   "subtitle1": "concevoir des jeux.",
@@ -7,8 +9,8 @@
   "subtitle3" : "apprendre.",
   "subtitle4" : "faire partie d'une équipe.",
   "subtitle5" : "experimenter.",
-  "about-content" : "Salut ! je m'appelle Thomas et je suis game designer autodidacte et développeur web de formation. Ce double jeu de compétences me permet de comprendre et ",
-  "about-info" : "La navigation de ce site est particuliere, afin d'avoir des informations il vous faudra cliquer sur les objets en surbrillance. Si cela ne vous conviens pas, il ne vous reste plus qu'a appuyer sur le bouton en haut à droite de l'écran et faire apparaitre le menu.",
+  "about-content" : "Salut ! je m'appelle Thomas et je suis game designer autodidacte et développeur web de formation. J'aime concevoir et développer des experiences interactives, qu'elles soient vidéoludique ou web. C'est pourquoi les notions d'UX, d'UI et de design m'inspirent et m'intéressent aussi. L'experience que j'ai pu acquérir en développement lors de ma formation me sert à faire le lien entre les problématiques de game design et de programmation, qui sont importante à comprendre pour un travail en équipe efficace. Experimentant en gamejam ou en projet j'ai aussi pu mettre en pratique des méthodes de gestion de projet agile (mais aussi en waterfall).",
+  "about-info" : "La navigation sur le portfolio est particulière (et peut être très pauvre sur mobile, pour une meilleure experience, je vous conseille d'ouvrir ce site avec une résolution suffisante). Vous avez la possibilité d'ouvrir une fenêtre d'information de deux manières : en cliquant sur un objet apparaissant en surbrillance au passage de la souris ou en l'ouvrant directement depuis le menu.",
   "spotify-title" : "Playlist",
   "twitter-title" : "Twitter",
   "work-title" : "Développement",

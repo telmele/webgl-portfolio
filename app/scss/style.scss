@@ -5,6 +5,7 @@ body, html, #html, canvas {
 	overflow: hidden;
 }
 body {
+	background-color: #17181b;
 }
 #html {
 	width:100%;
@@ -93,7 +94,9 @@ text {
 }
 
 .svg-text {fill: lighten($db, 16)}
-.svg-masked-text {fill: rgba(#3b3e46, 1);}
+.svg-masked-text {
+	fill: rgba(#ffffff, 1);
+}
 
 image {
 	transform: scale(1.1);

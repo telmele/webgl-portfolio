@@ -11,7 +11,7 @@ var prod = true;
 
 var camera, controls, scene, stats, renderer, loadingMananger;
 var cssScene, cssRenderer;
-var composer, glitchPass, outlinePass, clock;
+var composer, glitchPass, informativeOutline, outlinePass, clock;
 var poster, headset, bird, controller, laptop;
 var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();
@@ -21,14 +21,23 @@ const SPHERE_NB = 100;
 const COLORS = [0xeeeeee];
 var spheres = [];
 
+var isSmartphone = false;
+
 function init() {
-	initScene();
-	initRenderers();
-	initCSS3D();
-	initBackground();
-	initLights();
-	initPostProcessing();
-	animate();
+	if(window.innerWidth < 768) {
+		console.log(window.innerWidth);
+		isSmartphone = true;
+	}
+
+	if(!isSmartphone) {
+		initScene();
+		// initRenderers();
+		// initCSS3D();
+		// initBackground();
+		// initLights();
+		// initPostProcessing();
+		animate();
+	}
 }
 
 function initScene() {
@@ -57,6 +66,28 @@ function initScene() {
 		document.body.appendChild( stats.dom );
 	}
 
+	loadingMananger = new THREE.LoadingManager();
+	loadingMananger.onStart = function ( url, itemsLoaded, itemsTotal ) {
+		console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+	};
+
+	loadingMananger.onLoad = function ( ) {
+		console.log( 'Loading complete!');
+		informativeOutline.selectedObjects.push(poster);
+		informativeOutline.selectedObjects.push(headset);
+		informativeOutline.selectedObjects.push(bird);
+		informativeOutline.selectedObjects.push(controller);
+		informativeOutline.selectedObjects.push(laptop);
+	};
+
+	loadingMananger.onProgress = function ( url, itemsLoaded, itemsTotal ) {
+		console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+	};
+
+	loadingMananger.onError = function ( url ) {
+		console.log( 'There was an error loading ' + url );
+	};
+
 	/** CALLBACKS **/
 	/** Scale canvas to window size */
 	window.addEventListener( 'resize', function() {
@@ -70,7 +101,8 @@ function initScene() {
 		mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 	}, false );
 	/** Call the callback set to object if it exists */
-	window.addEventListener('mousedown', function() {
+	window.addEventListener('mousedown', function(ev) {
+		ev.preventDefault();
 		raycaster.setFromCamera( mouse, camera );
 		// calculate objects intersecting the picking ray
 		var intersects = raycaster.intersectObjects( scene.children );
@@ -81,158 +113,165 @@ function initScene() {
 		}
 	});
 
+	var pen = new THREE.Mesh(new THREE.ConeGeometry(5,20,32), new THREE.MeshBasicMaterial({ color : 0xffff00 }));
+	scene.add(pen);
 	/**
 	 *	Workshop loader
 	 */
-	var mtlLoader = new THREE.MTLLoader();
-	mtlLoader.load( "../model/workshop/materials.mtl", function( materials ) {
-		for(var i = 0; i < materials.getAsArray().length; i++) {
-			var mat = materials.getAsArray()[i];
-			if(mat.name === "mat2") {
-				mat.emissive = new THREE.Color( 0xddddff);
-				mat.emissiveLight = 1;
-				mat.emissiveIntensity = 1;
-			}
-			if(mat.name === "mat14") {
-				mat.emissive = new THREE.Color( 0x73FBFF);
-				mat.emissiveLight = 1;
-				mat.emissiveIntensity = 1;
-			}
-			if(mat.name === "mat12") {
-				mat.emissive = mat.color;
-				mat.emissiveLight = 1;
-				mat.emissiveIntensity = 0.3;
-			}
-			if(mat.name === "mat9") {
-				mat.emissive = mat.color;
-				mat.emissiveLight = 1;
-				mat.emissiveIntensity = 0.3;
-			}
-		}
-		var objLoader = new THREE.OBJLoader();
-		objLoader.setMaterials( materials );
-		objLoader.load( "../model/workshop/model.obj", function(object) {
-			object.scale.set(object.scale.x * modelScale, object.scale.y * modelScale, object.scale.z * modelScale);
-			object.castShadow = true;
-			object.receiveShadow = true;
-			for(var i = 0; i < object.children.length; i++) {
-				var mesh = object.children[i];
-				mesh.castShadow = true;
-				mesh.receiveShadow = true;
-				switch(mesh.name) {
-					case "mesh1854588575":
-						object.children.splice(i, 1);
-						poster = mesh;
-						scene.add(poster);
-						poster.scale.set(6,6,6);
-						poster.callback = function() {
-							var html = document.getElementById("graphic");
-							closeModal();
-							modalOpened = html;
-							html.className += ' ' + 'is-active';
-							anime({targets : menu, translateX : 0, easing : 'easeInQuad'});
-							menuOpened = !menuOpened;
-							triggerGlitch();
+	// var mtlLoader = new THREE.MTLLoader(loadingMananger);
+	// mtlLoader.load( "../model/workshop/materials.mtl", function( materials ) {
+	// 	for(var i = 0; i < materials.getAsArray().length; i++) {
+	// 		var mat = materials.getAsArray()[i];
+	// 		if(mat.name === "mat2") {
+	// 			mat.emissive = new THREE.Color( 0xddddff);
+	// 			mat.emissiveLight = 1;
+	// 			mat.emissiveIntensity = 1;
+	// 		}
+	// 		if(mat.name === "mat14") {
+	// 			mat.emissive = new THREE.Color( 0x73FBFF);
+	// 			mat.emissiveLight = 1;
+	// 			mat.emissiveIntensity = 1;
+	// 		}
+	// 		if(mat.name === "mat12") {
+	// 			mat.emissive = mat.color;
+	// 			mat.emissiveLight = 1;
+	// 			mat.emissiveIntensity = 0.3;
+	// 		}
+	// 		if(mat.name === "mat9") {
+	// 			mat.emissive = mat.color;
+	// 			mat.emissiveLight = 1;
+	// 			mat.emissiveIntensity = 0.3;
+	// 		}
+	// 	}
+	// 	var objLoader = new THREE.OBJLoader(loadingMananger);
+	// 	objLoader.setMaterials( materials );
+	// 	objLoader.load( "../model/workshop/model.obj", function(object) {
+	// 		object.scale.set(object.scale.x * modelScale, object.scale.y * modelScale, object.scale.z * modelScale);
+	// 		object.castShadow = true;
+	// 		object.receiveShadow = true;
+	// 		for(var i = 0; i < object.children.length; i++) {
+	// 			var mesh = object.children[i];
+	// 			mesh.castShadow = true;
+	// 			mesh.receiveShadow = true;
+	// 			switch(mesh.name) {
+	// 				case "mesh1854588575":
+	// 					object.children.splice(i, 1);
+	// 					poster = mesh;
+	// 					scene.add(poster);
+	// 					// poster.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, 0 ) );
+	// 					poster.scale.set(6,6,6);
+	// 					// poster.rotation.y = Math.PI/2;
+	// 					poster.position.set( 0,0,0);
+	// 					poster.castShadow = false;
+	// 					poster.receiveShadow = false;
+	// 					poster.callback = function() {
+	// 						var html = document.getElementById("graphic");
+	// 						closeModal();
+	// 						modalOpened = html;
+	// 						html.className += ' ' + 'is-active';
+	// 						anime({targets : menu, translateX : 0, easing : 'easeInQuad'});
+	// 						menuOpened = !menuOpened;
+	// 						triggerGlitch();
+	//
+	// 					};
+	// 					break;
+	// 				case "mesh850969638":
+	// 					object.children.splice(i, 1);
+	// 					headset = mesh;
+	// 					scene.add(headset);
+	// 					headset.scale.set(6,6,6);
+	// 					headset.callback = function() {
+	// 						var html = document.getElementById("spotify");
+	// 						closeModal();
+	// 						modalOpened = html;
+	// 						html.className += ' ' + 'is-active';
+	// 						anime({targets : menu, translateX : 0, easing : 'easeInQuad'});
+	// 						menuOpened = !menuOpened;
+	// 						triggerGlitch();
+	//
+	// 					};
+	// 					break;
+	// 				case "mesh1079008815":
+	// 					object.children.splice(i, 1);
+	// 					laptop = mesh;
+	// 					scene.add(laptop);
+	// 					laptop.callback = function () {
+	// 						var html = document.getElementById("work");
+	// 						closeModal();
+	// 						modalOpened = html;
+	// 						html.className += ' ' + 'is-active';
+	// 						anime({targets : menu, translateX : 0, easing : 'easeInQuad'});
+	// 						menuOpened = !menuOpened;
+	// 						triggerGlitch();
+	// 					};
+	// 					laptop.scale.set(6,6,6);
+	// 					break;
+	// 				case "mesh1592160675" :
+	// 				case "mesh2013451613":
+	// 					object.children.splice(i, 1);
+	// 					scene.remove(mesh);
+	// 				default:
+	// 			}
+	// 		}
+	// 		scene.add(object);
+	// 	});
+	// });
 
-						};
-						break;
-					case "mesh850969638":
-						object.children.splice(i, 1);
-						headset = mesh;
-						scene.add(headset);
-						headset.scale.set(6,6,6);
-						headset.callback = function() {
-							var html = document.getElementById("spotify");
-							closeModal();
-							modalOpened = html;
-							html.className += ' ' + 'is-active';
-							anime({targets : menu, translateX : 0, easing : 'easeInQuad'});
-							menuOpened = !menuOpened;
-							triggerGlitch();
-
-						};
-						break;
-					case "mesh1079008815":
-						object.children.splice(i, 1);
-						laptop = mesh;
-						scene.add(laptop);
-						laptop.callback = function () {
-							var html = document.getElementById("work");
-							closeModal();
-							modalOpened = html;
-							html.className += ' ' + 'is-active';
-							anime({targets : menu, translateX : 0, easing : 'easeInQuad'});
-							menuOpened = !menuOpened;
-							triggerGlitch();
-						};
-						laptop.scale.set(6,6,6);
-						break;
-					case "mesh1592160675" :
-					case "mesh2013451613":
-						object.children.splice(i, 1);
-						scene.remove(mesh);
-					default:
-				}
-			}
-			scene.add(object);
-		});
-	});
-
-	/**
-	 * Bird loader
-	 * @type {THREE.MTLLoader}
-	 */
-	mtlLoader = new THREE.MTLLoader();
-	mtlLoader.setTexturePath("../model/twitter/");
-	mtlLoader.load( "../model/twitter/WesternBluebird.mtl", function( materials ) {
-		var objLoader = new THREE.OBJLoader();
-		materials.getAsArray()[0].color = new THREE.Color(0xffffff);
-		materials.preload();
-		objLoader.setMaterials(materials);
-		objLoader.load("../model/twitter/WesternBluebird.obj", function(object) {
-			bird = object.children[0];
-			bird.rotation.y = - Math.PI;
-			bird.position.set(0,3.25,7);
-			bird.callback = function() {
-				var html = document.getElementById("twitter");
-				closeModal();
-				modalOpened = html;
-				html.className += ' ' + 'is-active';
-				anime({targets : menu, translateX : 0, easing : 'easeInQuad'});
-				menuOpened = !menuOpened;
-				triggerGlitch();
-			};
-			scene.add(bird);
-		})
-	});
-
-	/**
-	 * Controller loader
-	 */
-	mtlLoader = new THREE.MTLLoader();
-	mtlLoader.setTexturePath("../model/controller/");
-	mtlLoader.load( "../model/controller/controller.mtl", function( materials ) {
-		var objLoader = new THREE.OBJLoader();
-		materials.getAsArray()[0].color = new THREE.Color(0xffffff);
-		materials.preload();
-		objLoader.setMaterials(materials);
-		objLoader.load("../model/controller/controller.obj", function(object) {
-			controller = object.children[0];
-			controller.scale.set(0.04,0.04,0.04);
-			controller.position.set(-1.2,-1.3,3);
-			controller.rotation.y = Math.PI/2;
-			controller.callback = function() {
-				var html = document.getElementById("gamejam");
-				closeModal();
-				modalOpened = html;
-				html.className += ' ' + 'is-active';
-				anime({targets : menu, translateX : 0, easing : 'easeInQuad'});
-				menuOpened = !menuOpened;
-				triggerGlitch();
-			};
-			scene.add(controller);
-		})
-	});
+	// /**
+	//  * Bird loader
+	//  * @type {THREE.MTLLoader}
+	//  */
+	// mtlLoader = new THREE.MTLLoader(loadingMananger);
+	// mtlLoader.setTexturePath("../model/twitter/");
+	// mtlLoader.load( "../model/twitter/WesternBluebird.mtl", function( materials ) {
+	// 	var objLoader = new THREE.OBJLoader(loadingMananger);
+	// 	materials.getAsArray()[0].color = new THREE.Color(0xffffff);
+	// 	materials.preload();
+	// 	objLoader.setMaterials(materials);
+	// 	objLoader.load("../model/twitter/WesternBluebird.obj", function(object) {
+	// 		bird = object.children[0];
+	// 		bird.rotation.y = - Math.PI;
+	// 		bird.position.set(0,3.25,7);
+	// 		bird.callback = function() {
+	// 			var html = document.getElementById("twitter");
+	// 			closeModal();
+	// 			modalOpened = html;
+	// 			html.className += ' ' + 'is-active';
+	// 			anime({targets : menu, translateX : 0, easing : 'easeInQuad'});
+	// 			menuOpened = !menuOpened;
+	// 			triggerGlitch();
+	// 		};
+	// 		scene.add(bird);
+	// 	})
+	// });
+	//
+	// /**
+	//  * Controller loader
+	//  */
+	// mtlLoader = new THREE.MTLLoader(loadingMananger);
+	// mtlLoader.setTexturePath("../model/controller/");
+	// mtlLoader.load( "../model/controller/controller.mtl", function( materials ) {
+	// 	var objLoader = new THREE.OBJLoader(loadingMananger);
+	// 	materials.getAsArray()[0].color = new THREE.Color(0xffffff);
+	// 	materials.preload();
+	// 	objLoader.setMaterials(materials);
+	// 	objLoader.load("../model/controller/controller.obj", function(object) {
+	// 		controller = object.children[0];
+	// 		controller.scale.set(0.04,0.04,0.04);
+	// 		controller.position.set(-1.2,-1.3,3);
+	// 		controller.rotation.y = Math.PI/2;
+	// 		controller.callback = function() {
+	// 			var html = document.getElementById("gamejam");
+	// 			closeModal();
+	// 			modalOpened = html;
+	// 			html.className += ' ' + 'is-active';
+	// 			anime({targets : menu, translateX : 0, easing : 'easeInQuad'});
+	// 			menuOpened = !menuOpened;
+	// 			triggerGlitch();
+	// 		};
+	// 		scene.add(controller);
+	// 	})
+	// });
 }
 
 /**
@@ -327,7 +366,16 @@ function initPostProcessing() {
 	composer.addPass( new THREE.RenderPass( scene, camera ) );
 
 	outlinePass = new THREE.OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), scene, camera);
+	outlinePass.hiddenEdgeColor = new THREE.Color( 0x000000 );
 	composer.addPass( outlinePass );
+
+	informativeOutline = new THREE.OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), scene, camera);
+	// informativeOutline.edgeGlow = 1;
+	informativeOutline.edgeStrength = 1;
+	informativeOutline.hiddenEdgeColor = new THREE.Color( 0x000000 );
+	informativeOutline.visibleEdgeColor = new THREE.Color( 0xffffff );
+	informativeOutline.pulsePeriod = 5;
+	composer.addPass( informativeOutline );
 
 	var effectFXAA = new THREE.ShaderPass( THREE.FXAAShader );
 	effectFXAA.uniforms[ 'resolution' ].value.set( 1 / window.innerWidth, 1 / window.innerHeight );
@@ -353,7 +401,6 @@ function triggerGlitch() {
 		glitchPass.goWild = false;
 		glitchPass.renderToScreen = false;
 	}, 350);
-
 }
 /**
  * Called every frame, render scene and raycast the mouse
@@ -361,26 +408,26 @@ function triggerGlitch() {
  */
 function animate(e) {
 	requestAnimationFrame( animate );
-	if(!prod) { stats.begin(); }
-	controls.update();
-	raycaster.setFromCamera( mouse, camera );
-	// calculate objects intersecting the picking ray
-	var intersects = raycaster.intersectObjects( scene.children );
-	outlinePass.selectedObjects = [];
-	if(intersects.length > 0) {
-		outlinePass.selectedObjects.push(intersects[0].object);
-	}
-	for (var i = 0; i < spheres.length; i++) {
-		spheres[i].rotation.x += 0.001;
-		spheres[i].rotation.y += 0.001;
-		spheres[i].rotation.z += 0.001;
-
-	}
-
-	if(!prod) { stats.end(); }
-	var delta = clock.getDelta();
-	composer.render(delta);
-	// renderer.render( scene, camera );
+	// if(!prod) { stats.begin(); }
+	// controls.update();
+	// raycaster.setFromCamera( mouse, camera );
+	// // calculate objects intersecting the picking ray
+	// var intersects = raycaster.intersectObjects( scene.children );
+	// outlinePass.selectedObjects = [];
+	// if(intersects.length > 0) {
+	// 	outlinePass.selectedObjects.push(intersects[0].object);
+	// }
+	// for (var i = 0; i < spheres.length; i++) {
+	// 	spheres[i].rotation.x += 0.001;
+	// 	spheres[i].rotation.y += 0.001;
+	// 	spheres[i].rotation.z += 0.001;
+	//
+	// }
+	//
+	// if(!prod) { stats.end(); }
+	// var delta = clock.getDelta();
+	// composer.render(delta);
+	renderer.render( scene, camera );
 	// cssRenderer.render(cssScene, camera);
 
 }

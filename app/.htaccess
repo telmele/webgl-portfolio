@@ -1,0 +1,5 @@
+#DirectoryIndex fr/index.html
+# Rewrite --- http://www.hakunamacouta.fr/index.html.en => http://www.hakunamacouta.fr/en/
+#Options +FollowSymlinks
+#RewriteEngine On
+#RewriteRule ^index\.html\.en$ /  en/?&%{QUERY_STRING}

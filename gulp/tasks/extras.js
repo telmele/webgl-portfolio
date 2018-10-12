@@ -19,7 +19,8 @@ const config = require("../config").extras;
 
 gulp.task('extras', () => {
 	return gulp.src(config.src, {
-		dot: true
+		dot: true,
+		"base" : "./app"
 	})
 		.pipe(gulp.dest(config.dest));
 });

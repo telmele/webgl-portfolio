@@ -31,7 +31,10 @@ menuBtn.addEventListener('mousedown', function() {
  */
 function closeModal() {
 	modalOpened.className = "modal";
-	triggerGlitch();
+	if(!isSmartphone) {
+		console.log(isSmartphone);
+		triggerGlitch();
+	}
 }
 
 function openModal(el) {
@@ -41,7 +44,9 @@ function openModal(el) {
 	closeModal();
 	modalOpened = html;
 	html.className += ' ' + 'is-active';
-	triggerGlitch();
+	if(!isSmartphone) {
+		triggerGlitch();
+	}
 }
 
 /**

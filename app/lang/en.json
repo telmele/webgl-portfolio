@@ -1,5 +1,7 @@
 {
   "lang" : "en",
+  "description" : "",
+  "keywords" : "",
   "title" : "Thomas Blanc - Portfolio Web Developer | Game Designer",
   "about-subtitle" : "",
   "subtitle1": "",
@@ -8,7 +10,7 @@
   "subtitle4" : "",
   "subtitle5" : "",
   "about-content" : "",
-  "about-info" : "",
+  "about-info" : "English trad are not available yet. Pls wait.",
   "spotify-title" : "",
   "twitter-title" : "",
   "work-title" : "",
@@ -26,5 +28,7 @@
   "runner-content" : "",
   "jpo-title" : "",
   "jpo-content" : "",
-  "j34d-content" : ""
+  "j34d-content" : "",
+  "abeii-title" : "Soiréé Asso IUT",
+  "abeii-content" : "Photoshop"
 }

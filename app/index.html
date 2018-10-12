@@ -11,17 +11,24 @@
 <html lang="${lang}">
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="${description}">
+	<meta name="author" content="Thomas Blanc">
+	<meta name="keywords" content="${keywords}"/>
+
 	<title>${title}</title>
+	<link rel="icon" href="octopus.ico" />
 	<!--build:css css/styles.min.css-->
 	<link href="css/normalize.css" rel="stylesheet" type="text/css"/>
 	<link rel="stylesheet" href="css/style.css" type="text/css"/>
 	<link href="css/bulma.css" rel="stylesheet" type="text/css" />
-	<link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
 	<!--endbuild-->
+	<link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+	<script src="js/anime.min.js" type="text/javascript"></script>
 	<!--build:js js/three.min.js -->
 	<script src="js/three/three.min.js" type="text/javascript"></script>
 	<!--endbuild-->
-	<!--build:js js/three-dependencies.min.js -->
+	<!--build:js js/threedependencies.min.js -->
 	<script src="js/three/OBJLoader.js" type="text/javascript"></script>
 	<script src="js/three/MTLLoader.js" type="text/javascript"></script>
 	<script src="js/three/OrbitControls.js" type="text/javascript"></script>
@@ -51,13 +58,13 @@
 				<header>
 					<h1>Thomas Blanc</h1>
 					<h2>${about-subtitle}
-						<span class="txt-rotate" data-period="2000" data-rotate='[ "${subtitle1}", "${subtitle2}", "${subtitle3}", "${subtitle4}", "${subtitle5}" ]'></span>
+						<span class="txt-rotate" data-period="1000" data-rotate='[ "${subtitle1}", "${subtitle2}", "${subtitle3}", "${subtitle4}", "${subtitle5}" ]'></span>
 					</h2>
 				</header>
 				<section>
 					<div id="about-me">
 						<figure class="image is-128x128">
-							<img src="https://bulma.io/images/placeholders/256x256.png">
+							<img src="img/moi.jpg">
 						</figure>
 						<p>${about-content}</p>
 					</div>
@@ -84,7 +91,7 @@
 					<h1>${spotify-title}</h1>
 				</header>
 				<section>
-					<iframe width='100%' height="500px" src="https://embed.spotify.com/?uri=spotify%3Auser%3A11141097177%3Aplaylist%3A7GBRsVWYxddARHxbFAC9c7" frameborder="0" allowtransparency="true"></iframe>
+					<iframe src="https://embed.spotify.com/?uri=spotify%3Aalbum%3A5Nn4vcAeuJRrYiZoPjgV6B" width="100%" height="500" frameborder="0" allowtransparency="true"></iframe>
 				</section>
 				<footer>
 				</footer>
@@ -306,7 +313,7 @@
 								</text>
 								<g clip-path='url(#clip-8)'>
 									<image height='100%' preserveAspectRatio='xMinYMin slice' width='100%' xlink:href='../img/jpo.png'></image>
-									<text class='svg-masked-text' style="fill:white" dy='.3em' x='50%' y='50%'>
+									<text class='svg-masked-text' dy='.3em' x='50%' y='50%'>
 										${jpo-content}
 									</text>
 								</g>
@@ -324,7 +331,7 @@
 								</text>
 								<g clip-path='url(#clip-9)'>
 									<image height='100%' preserveAspectRatio='xMinYMid slice' width='100%' xlink:href='../img/j34d.png'></image>
-									<text class='svg-masked-text' style="fill:white" dy='.3em' x='50%' y='50%'>
+									<text class='svg-masked-text' dy='.3em' x='50%' y='50%'>
 										${j34d-content}
 									</text>
 								</g>
@@ -342,7 +349,7 @@
 								</text>
 								<g clip-path='url(#clip-10)'>
 									<image height='100%' preserveAspectRatio='xMinYMid slice' width='100%' xlink:href='../img/abeii_si.png'></image>
-									<text class='svg-masked-text' style="fill:white" dy='.3em' x='50%' y='50%'>
+									<text class='svg-masked-text' dy='.3em' x='50%' y='50%'>
 										${abeii-content}
 									</text>
 								</g>
@@ -362,16 +369,16 @@
 				<span></span>
 				<span></span>
 			</button>
-			<aside id="menu" class="menu column is-3-fullhd  is-4-desktop is-5-tablet is-6-mobile">
+			<aside id="menu" class="menu column is-3-fullhd is-4-desktop is-6-tablet is-8-mobile">
 				<ul class="lang">
-					<li><a href="">FR</a></li>
-					<li><a href="">EN</a></li>
+					<!--<li><a href="/fr/index.html">FR</a></li>-->
+					<!--<li><a href="/en/index.html">EN</a></li>-->
 				</ul>
 				<ul class="menu-list">
 					<li><a onclick="openModal(this)" data-target="about">${about}</a></li>
 				</ul>
 				<p class="menu-label">
-					Work
+					Portfolio
 				</p>
 				<ul class="menu-list">
 					<li><a onclick="openModal(this)" data-target="work">${work-title}</a></li>
@@ -449,7 +456,6 @@
 	</div>
 </div>
 <!--build:js js/scripts.min.js -->
-<script src="../bower_components/animejs/anime.js" type="text/javascript"></script>
 <script src="js/scripts.js" type="text/javascript"></script>
 <script src="js/cssObjects.js" type="text/javascript"></script>
 <script src="js/scene.js" type="text/javascript"></script>

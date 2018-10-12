@@ -11,12 +11,13 @@ const jsDir = src + "/js";
 const styleDir = src + "/scss";
 const imgDir = src + "/images";
 const langDir = src + "/lang";
+const modelDir = src + "/model";
 
 module.exports = {
 	html: {
 		"src": src + "/*.html",
 		"dest": dest,
-		"useref": {searchPath: ['.tmp', 'app', '.']},
+		"useref": {searchPath: ['.tmp', 'app', '.'] },
 		"cssNano": {safe: true, autoprefixer: false},
 		"htmlmin": {
 			collapseWhitespace: true,
@@ -30,7 +31,7 @@ module.exports = {
 		},
 		"international": {
 			locales : src + "/lang",
-			filename : '${name}-${lang}.${ext}',
+			filename : '${lang}/${name}.${ext}',
 			delimiter : { prefix: '${', suffix: '}'
 			}
 		},
@@ -112,13 +113,11 @@ module.exports = {
 	},
 	extras: {
 		src: [
-			src + '/model/**/*',
+			modelDir + "/**/*",
+			src + "/.htaccess",
+			src + "/octopus.ico",
+			jsDir + "/anime.min.js"
 		],
-		dest: dest + '/model'
-	},
-	international: {
-		lang : src + "/lang",
-		src: src + "/index.html",
 		dest: dest
 	},
 	image: {
